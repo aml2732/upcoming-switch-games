@@ -7,5 +7,10 @@
 # API :
 - `http://localhost:5000/games/list` : lists games in system
 
+# ADMIN API
+- `http://localhost:5001/games/newimage` (POST) new (DONE)
+- `http://localhost:5001/games/gamesImageList` helper so I can see the state of the db
+- `http://localhost:5001/games/getImage/:id` fetch a single image from the db
+
 # Demo:
 [https://powerful-refuge-64756.herokuapp.com/](https://powerful-refuge-64756.herokuapp.com/)

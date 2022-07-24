@@ -15,6 +15,11 @@
       padding: 1rem;
     }
 
+    .tiny-box img{
+      width:30px;
+      height:30px;
+    }
+
     .sub-widths-350>*:not(type=[file]){width:350px;}
   </style>
 </HEAD>
@@ -66,7 +71,7 @@
         results.forEach((item)=>{
           let newElement = document.createElement('div');
           newElement.classList.add('tiny-box')
-          newElement.innerHTML= `${item.id}<br/>${item.name}<br/>...more here in future`
+          newElement.innerHTML= `${item.id}<br/>${item.name}<br/><img src="/games/getImage/${item.id}"/>`
           document.getElementById('current-games-hook').append(newElement);
         })
 
@@ -93,7 +98,7 @@
     }
 
     function runUploadImageForExistingGame(){
-      console.log('begining runUploadImageForExistingGame...')
+      /*console.log('begining runUploadImageForExistingGame...')
       let payload = {};
       payload.id = document.getElementById('image-id').value;
       payload.image = document.getElementById('image-image').files[0]
@@ -105,7 +110,11 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-      })
+      })*/
+      var fdata = new FormData();
+      fdata.append('file', document.getElementById('image-image').files[0])
+      fdata.append('id', document.getElementById('image-id').value)
+      fetch('/games/newimage',{method:'post',body:fdata})
     }
   </script>
 </BODY>

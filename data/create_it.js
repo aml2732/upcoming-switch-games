@@ -24,6 +24,20 @@ const initialData = [
   VALUES ('Hogwarts Legacy', 'An immersive, open-world action RPG set in the world first introduced in the Harry Potter books', 'https://www.hogwartslegacy.com/en-us/faq', NULL);`
 ];
 
+const createGameThumbnailsSchema= `CREATE TABLE IF NOT EXISTS thumbnails(
+  ID serial not null primary key,
+  GAMEID INT NOT NULL,
+  IMG BYTEA NOT NULL,
+  FOREIGN KEY(GAMEID) REFERENCES games(id)
+);`
+
+//I don't have superuser permissions for this :(
+/*
+const initialThumbnail = `INSERT INTO thumbnails (GAMEID, IMG)
+VALUES(2, pg_read_file('./royaltyFreeDefaultImage.jpg')::bytea);
+`
+*/
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -42,6 +56,7 @@ const pool = new Pool({
   let res = await pool.query(creategamesSchema);
   console.log("Created table:games if it didn't already exist...")
 
+
   //Populate table
   for(item of initialData){
     await pool.query(item);
@@ -51,6 +66,13 @@ const pool = new Pool({
   res = await pool.query('SELECT * FROM games');
   console.log(res.rows)
   if(res.rows.length>0){console.log('Success...')}
+
+  await pool.query(createGameThumbnailsSchema)
+  console.log("Created thumbnails table if it didn't already exist...")
+
+  /*await pool.query(initialThumbnail);
+  console.log('inserted one file into thumbnail table...')
+  */
 
 
 })().then(res => {

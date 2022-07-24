@@ -11,6 +11,7 @@ const pool = new Pool({
 
 (async () => {
   console.log('Dropping table games...')
+  await pool.query('DROP TABLE thumbnails');
   await pool.query('DROP TABLE games');
   console.log('Finished Dropping tables...')
 })().then(res => {
