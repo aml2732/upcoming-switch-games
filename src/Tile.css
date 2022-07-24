@@ -1,0 +1,17 @@
+.tile{
+  background-color: #c8c8c8;
+  width:200px;
+  height:200px;
+  border: solid 1px #000000;
+  position:relative;
+  display:inline-block;
+}
+
+
+.tile .title-text-container{
+  position:absolute;
+  bottom: 0;
+  left:0;
+  right:0;
+  height:20px;
+}

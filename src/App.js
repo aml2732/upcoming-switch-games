@@ -1,23 +1,22 @@
-import logo from './logo.svg';
+import react, {useEffect, useState} from 'react';
+import Tile from './Tile';
 import './App.css';
 
 function App() {
+  const [data, setData] = useState([]);
+
+
+  useEffect(()=>{
+    fetch('/games/list')
+    .then(res => res.json())
+    .then((result)=>{
+      setData(result);
+    })
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {data.map((item)=>{return (<Tile data={item} key={`Tile-container-${item.id}`}/>)})}
     </div>
   );
 }
