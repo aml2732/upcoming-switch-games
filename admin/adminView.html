@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+  <style>
+    .section-border{
+      border: solid 1px black;
+      padding: 1rem;
+    }
+
+    .tiny-box{
+      border: solid 1px black;
+      width:200px;
+      height:60px;
+      display:inline-block;
+      margin-right:1rem;
+      padding: 1rem;
+    }
+
+    .sub-widths-350>*:not(type=[file]){width:350px;}
+  </style>
+</HEAD>
+<BODY onload="fetchCurrentGames()">
+  <H1>Upcoming Games Admin tool</H1>
+  <p>The regular upcoming-switch-games application doesn't allow for the creation or edit of new games. It also doesn't make those endpoints accessible. This tool is for maintanance of db without needing to write crazy commands all the time</p>\
+
+  <div class="section-border">
+    <h2>Current games</h2>
+    <div id="current-games-hook"></div>
+  </div>
+  <div class="section-border">
+    <h2>New</h2>
+    <div class="sub-widths-350">
+      Name:<br/><br/>
+      <input id="new-name" type="text"/><br/><br/>
+      Description:<br/><br/>
+      <textarea id="new-description"></textarea><br/><br/>
+      Link:<br/><br/>
+      <input id="new-linkto" type="text"/><br/><br/>
+      Release Date:<br/><br/>
+      <input id="new-releasedate" type="text" placeholder="yyyy-mm-dd" /><br/><br/>
+      Image:<br/><br/>
+      <input id="new-image" type="file"><br/><br/>
+      <button onclick="runCreate()">Create</button>
+    </div>
+  </div>
+  <div class="section-border">
+    <h2>Edit</h2>
+    <div></div>
+  </div>
+  <div class="section-border">
+    <h2>Upload Image for Existing Game</h2>
+    <div>
+      ID: <br/><br/>
+      <input id="image-id" type="text" /><br/><br/>
+      Image: <br/><br/>
+      <input id="image-image" type="file"><br/><br/>
+      <button onclick="runUploadImageForExistingGame()">Upload</button>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function fetchCurrentGames(){
+      console.log('attempting to fetchCurrentGames...')
+      fetch('/games/list')
+      .then(res => res.json())
+      .then((results)=>{
+        results.forEach((item)=>{
+          let newElement = document.createElement('div');
+          newElement.classList.add('tiny-box')
+          newElement.innerHTML= `${item.id}<br/>${item.name}<br/>...more here in future`
+          document.getElementById('current-games-hook').append(newElement);
+        })
+
+      })
+    }
+
+    function runCreate(){
+      console.log('begining creation...')
+      let payload = {};
+      payload.name= document.getElementById('new-name').value;
+      payload.description = document.getElementById('new-description').value;
+      payload.link = document.getElementById('new-linkto').value;
+      payload.releasedate = document.getElementById('new-releasedate').value;
+      payload.image = document.getElementById('new-image').files[0]
+      console.log('payload', payload)
+      fetch('/games/new', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+    }
+
+    function runUploadImageForExistingGame(){
+      console.log('begining runUploadImageForExistingGame...')
+      let payload = {};
+      payload.id = document.getElementById('image-id').value;
+      payload.image = document.getElementById('image-image').files[0]
+      console.log('payload', payload)
+      fetch('/games/newimage', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+    }
+  </script>
+</BODY>
+</HTML>

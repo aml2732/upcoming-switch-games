@@ -1,18 +1,35 @@
+var pool = require('./utility/database.js');
 
-const tempData = [{
-  id: '1',
-  name: 'Test Name',
-  image: null,
-  expectedReleaseDate: '2023-01-10'
-},{
-  id: '2',
-  name: 'Test Name 2',
-  image: null,
-  expectedReleaseDate: '2023-04-10'
-}];
-
-function gamesList(req, res){
-  return res.send(tempData);
+async function gamesList(req, res){
+  let games = await pool.query('SELECT * FROM games');
+  console.log('games', games);
+  res.send(games.rows);
 }
 
-module.exports =  {gamesList}
+async function gamesNew(req, res){
+  console.log('req.body', req.body);
+  if(!req.body.name || !req.body.description ||!req.body.link){
+    return res.status(500).send({status:'failure'})
+  }
+  if(req.body.image){
+    console.log('typeof file', typeof req.body.image)
+  }
+  res.send({status: "success"});
+}
+
+
+async function gamesEdit(req, res){
+  console.log('req.body', req.body);
+  res.send({status: "success"});
+}
+
+async function gamesNewImage(req, res){
+  console.log('req.body', req.body);
+  if(!req.body.id || !req.body.image){
+    return res.status(500).send({status:'failure'})
+  }
+  console.log('typeof file', typeof req.body.image)
+  res.send({status: "success"});
+}
+
+module.exports =  {gamesList, gamesNew, gamesEdit}
