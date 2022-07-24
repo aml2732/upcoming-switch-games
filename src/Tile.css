@@ -5,6 +5,9 @@
   border: solid 1px #000000;
   position:relative;
   display:inline-block;
+  background-repeat: no-repeat;
+  background-position: center;
+  object-fit: cover;
 }
 
 
@@ -14,4 +17,5 @@
   left:0;
   right:0;
   height:20px;
+  color: white;
 }

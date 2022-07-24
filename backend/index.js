@@ -14,6 +14,8 @@ app.get('/ping', (req, res) => {
 })
 
 app.get('/games/list', api.gamesList)
+app.get('/games/image/:id', api.gamesGetSingleImage)
+
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(basePath, 'index.html'));
