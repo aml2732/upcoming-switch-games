@@ -19,5 +19,5 @@
 # Demo:
 [https://powerful-refuge-64756.herokuapp.com/](https://powerful-refuge-64756.herokuapp.com/)
 
-![example image of public app](/docs/exampleImageA.png)
+![example image of public app](/docs/exampleImageA.JPG)
 ![example image of admin app](/docs/exampleImageB.JPG)
