@@ -1,13 +1,39 @@
 .tile{
   background-color: #c8c8c8;
+  background-size: 0 0;
   width:200px;
   height:200px;
   border: solid 1px #000000;
   position:relative;
   display:inline-block;
+  position:relative;
+  margin-right: 1rem;
+  z-index: 1;
+}
+
+.tile:before{
+  content: '';
+  background-image: inherit;
   background-repeat: no-repeat;
   background-position: center;
-  object-fit: cover;
+  background-size: cover;
+  height: 100%;
+  left: 0px;
+  opacity: 1;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  z-index: -1;
+  transition: opacity 350ms;
+}
+
+.tile:hover:before{
+  opacity: 0.5;
+}
+
+.tile:hover{
+  border: solid 1px #4682b4;
+  box-shadow: 0px 0px 5px 8px rgba(70, 130, 180, 0.5);
 }
 
 
