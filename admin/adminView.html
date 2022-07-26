@@ -4,6 +4,7 @@
     .section-border{
       border: solid 1px black;
       padding: 1rem;
+      margin:1rem;
     }
 
     .tiny-box{
@@ -30,6 +31,11 @@
   <div class="section-border">
     <h2>Current games</h2>
     <div id="current-games-hook"></div>
+  </div>
+  <div class="section-border">
+    <h2>Delete</h2>
+    <input id="id-to-delete" />
+    <button onclick="runDelete()">Delete</button>
   </div>
   <div class="section-border">
     <h2>New</h2>
@@ -80,14 +86,12 @@
 
     function runCreate(){
       console.log('begining creation...')
-      let payload = {};
-      payload.name= document.getElementById('new-name').value;
-      payload.description = document.getElementById('new-description').value;
-      payload.link = document.getElementById('new-linkto').value;
-      payload.releasedate = document.getElementById('new-releasedate').value;
-      payload.image = document.getElementById('new-image').files[0]
-      console.log('payload', payload)
-      fetch('/games/new', {
+      let name= document.getElementById('new-name').value;
+      let description = document.getElementById('new-description').value;
+      let link = document.getElementById('new-linkto').value;
+      let releasedate = document.getElementById('new-releasedate').value;
+      let fileRef = document.getElementById('new-image').files[0]
+      /*fetch('/games/new', {
         method: 'post',
         headers: {
           'Accept': 'application/json',
@@ -95,26 +99,28 @@
         },
         body: JSON.stringify(payload)
       })
+      */
+
+      var fdata = new FormData();
+      if(fileRef){
+        fdata.append('file', document.getElementById('new-image').files[0]);
+      }
+      if(name){fdata.append('name', name)}
+      if(description){fdata.append('description',description)}
+      if(link){fdata.append('link',link)}
+      if(releasedate){fdata.append('releasedate',releasedate)}
+      fetch('/games/new', {method: 'post', body:fdata})
     }
 
     function runUploadImageForExistingGame(){
-      /*console.log('begining runUploadImageForExistingGame...')
-      let payload = {};
-      payload.id = document.getElementById('image-id').value;
-      payload.image = document.getElementById('image-image').files[0]
-      console.log('payload', payload)
-      fetch('/games/newimage', {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })*/
       var fdata = new FormData();
       fdata.append('file', document.getElementById('image-image').files[0])
       fdata.append('id', document.getElementById('image-id').value)
       fetch('/games/newimage',{method:'post',body:fdata})
+    }
+
+    function runDelete(){
+      fetch('/games/'+document.getElementById('id-to-delete').value, {method: 'delete'})
     }
   </script>
 </BODY>

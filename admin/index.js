@@ -28,6 +28,8 @@ app.get('/games/gamesImageList', api.gamesImageList)//delete this later
 
 app.get('/games/getImage/:id', api.gamesGetSingleImage)
 
+app.delete('/games/:id', api.gamesDelete)
+
 app.get('/', (req, res)=>{
   res.sendFile(path.resolve(__dirname, 'adminView.html'))
 })

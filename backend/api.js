@@ -5,13 +5,27 @@ async function gamesList(req, res){
   res.send(games.rows);
 }
 
+function escapeSingleQuote(str){
+  return str.replace(/'/g, "\'")
+}
+
 async function gamesNew(req, res){
   console.log('req.body', req.body);
   if(!req.body.name || !req.body.description ||!req.body.link){
     return res.status(500).send({status:'failure'})
   }
-  if(req.body.image){
-    console.log('typeof file', typeof req.body.image)
+  let insertStatement = `INSERT INTO games (NAME, DESCRIPTION, LINKTO, RELEASEDATE) VALUES ($1, $2, $3, $4) RETURNING id`
+  console.log('string to insert', insertStatement)
+  let newGame = await pool.query(insertStatement, [req.body.name, req.body.description, req.body.link, req.body.releasedate])
+  console.log('newGame: ', newGame)
+
+  if(req.files){
+    console.log('has a file')
+    console.log('-- file ', req.files)
+    let idToReference = newGame.rows[0].id;
+    console.log('-- idToReference', idToReference)
+    let filesResponse = await pool.query(`INSERT INTO thumbnails (GAMEID, IMG) VALUES (${idToReference}, $1)`, [req.files.file]);
+    console.log('what was filesResponse? ', filesResponse)
   }
   res.send({status: "success"});
 }
@@ -43,7 +57,7 @@ async function gamesGetSingleImage(req, res){
   if(!req.params.id){return res.status(500).send({status:"failure"})}
   let id = parseInt(req.params.id);
 
-  let response = await pool.query(`SELECT img FROM thumbnails WHERE id=${id}`)
+  let response = await pool.query(`SELECT img FROM thumbnails WHERE GAMEID=${id}`)
   if(response.rows && response.rows.length>0){
     let buff = Buffer.from(response.rows[0].img);
     let stringifiedRaw = buff.toString();
@@ -57,4 +71,14 @@ async function gamesGetSingleImage(req, res){
   }
 }
 
-module.exports =  {gamesList, gamesNew, gamesEdit, gamesNewImage, gamesImageList, gamesGetSingleImage}
+async function gamesDelete(req, res){
+  console.log('got to games delete...')
+  if(!req.params.id){
+    return res.status(500).send({status:"failure"})
+  }
+  await pool.query(`DELETE FROM thumbnails WHERE GAMEID=${req.params.id}`)
+  await pool.query(`DELETE FROM games WHERE id=${req.params.id}`);
+  res.send({status: "success"})
+}
+
+module.exports =  {gamesList, gamesNew, gamesEdit, gamesNewImage, gamesImageList, gamesGetSingleImage, gamesDelete}
