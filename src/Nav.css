@@ -1,0 +1,15 @@
+.nav{
+  background: linear-gradient(60deg, rgba(36,144,227,1) 0%, rgba(0,0,0,1) 50%, rgba(213,18,18,1) 100%);
+  color: white;
+  height:100px;
+  padding:1rem;
+  position: relative;
+}
+
+.nav>.site-title{
+  text-align: left;
+  position: absolute;
+  bottom: 1rem;
+  font-weight: bold;
+  font-family: monospace;
+}
